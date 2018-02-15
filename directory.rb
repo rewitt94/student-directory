@@ -1,0 +1,7 @@
+puts 'The students of Superhero Academy'
+puts '---------------------------------'
+puts 'Batman'
+puts 'Luther'
+puts 'Lara Croft'
+puts 'Rick'
+puts 'Luke Skywalker'
