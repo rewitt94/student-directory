@@ -3,7 +3,24 @@ def print_menu
   puts '1. Input students'
   puts '2. List students'
   puts '3. Save students'
+  puts '4. Load students'
   puts '9. Exit'
+end
+def process(selection)
+  case selection
+    when '1'
+      input_students
+    when '2'
+      list_students
+    when '3'
+      save_students
+    when '4'
+      load_students
+    when '9'
+      exit
+    else
+      puts 'Invalid selection'
+  end
 end
 def input_students
   puts "Please enter the names of students."
@@ -68,23 +85,20 @@ def save_students
   end
   file.close
 end
+def load_students
+  file = File.open("students.csv", "r")
+  file.readlines.each do |line|
+    name, cohort = line.chomp.split(',')
+    @students << {name: name, cohort: cohort.to_sym}
+  end
+  file.close
+end
 def interactive_menu
   @students = []
   loop do
     print_menu
     selection = gets.chomp
-    case selection
-    when '1'
-      input_students
-    when '2'
-      list_students
-    when '3'
-      save_students
-    when '9'
-      exit
-    else
-      puts 'Invalid selection'
-    end
+    process(selection)
   end
 end
 interactive_menu
