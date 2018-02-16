@@ -1,7 +1,6 @@
-def input_students
+def input_students(students)
   puts "Please enter the names of students."
   puts "To finish, just hit return twice"
-  students = []
   name = gets.chop
   while !name.empty? do
     puts "In which cohort is #{name}?"
@@ -45,9 +44,30 @@ def print_footer(students)
     puts "We have #{students.length} great students"
   end
 end
-students = input_students
-if students > 1
-  print_header
-  print(students)
-  print_footer(students)
+def interactive_menu
+  students = []
+  loop do
+    puts 'Select an option'
+    puts '1. Input students'
+    puts '2. List students'
+    puts '9. Exit'
+    selection = gets.chomp
+    case selection
+    when '1'
+      students = input_students(students)
+    when '2'
+      if students.length >= 1
+        print_header
+        print(students)
+        print_footer(students)
+      else
+        puts 'No students to list'
+      end
+    when '9'
+      exit
+    else
+      puts 'Invalid selection'
+    end
+  end
 end
+interactive_menu
