@@ -2,6 +2,7 @@ def print_menu
   puts 'Select an option'
   puts '1. Input students'
   puts '2. List students'
+  puts '3. Save students'
   puts '9. Exit'
 end
 def input_students
@@ -58,6 +59,15 @@ def list_students
     puts 'No students to list'
   end
 end
+def save_students
+  file = File.open("students.csv", "w")
+  @students.each do |student|
+    student_data = [student[:name],student[:cohort]]
+    csv_line = student_data.join(',')
+    file.puts csv_line
+  end
+  file.close
+end
 def interactive_menu
   @students = []
   loop do
@@ -68,6 +78,8 @@ def interactive_menu
       input_students
     when '2'
       list_students
+    when '3'
+      save_students
     when '9'
       exit
     else
