@@ -15,7 +15,7 @@ def process(selection)
     when '3'
       save_students
     when '4'
-      load_students
+      try_load_students
     when '9'
       exit
     else
@@ -25,17 +25,17 @@ end
 def input_students
   puts "Please enter the names of students."
   puts "To finish, just hit return twice"
-  name = gets.chop
+  name = STDIN.gets.chop
   while !name.empty? do
     puts "In which cohort is #{name}?"
-    join_date = gets.chop
+    join_date = STDIN.gets.chop
     @students << {name: name, cohort: join_date.to_sym}
     if @students.count < 2
       puts "Now we have #{@students.count} student"
     else
       puts "Now we have #{@students.count} students"
     end
-    name = gets.chop
+    name = STDIN.gets.chop
   end
 end
 def print_header
@@ -85,19 +85,32 @@ def save_students
   end
   file.close
 end
-def load_students
-  file = File.open("students.csv", "r")
+def load_students(filename = "students.csv")
+  file = File.open(filename, "r")
   file.readlines.each do |line|
     name, cohort = line.chomp.split(',')
     @students << {name: name, cohort: cohort.to_sym}
   end
   file.close
 end
+def try_load_students
+  if ARGV.first != nil
+    filename = ARGV.first
+    if File.exists?(filename)
+      load_students(filename)
+    else
+      puts "Sorry the file #{filename} isn't found"
+    end
+  else
+    load_students
+  end
+end
 def interactive_menu
   @students = []
   loop do
+    try_load_students
     print_menu
-    selection = gets.chomp
+    selection = STDIN.gets.chomp
     process(selection)
   end
 end
