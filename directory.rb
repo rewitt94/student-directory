@@ -9,13 +9,21 @@ end
 def process(selection)
   case selection
     when '1'
+      puts "You successfully choose option #{selection}: input students"
       input_students
     when '2'
+      puts "You successfully choose option #{selection}: list students"
       list_students
     when '3'
-      save_students
+      puts "You successfully choose option #{selection}: save students"
+      puts "Please insert a filename to save."
+      filename = gets.chomp
+      save_students(filename)
     when '4'
-      try_load_students
+      puts "You successfully choose option #{selection}: load students"
+      puts "Please insert a filename to load."
+      filename = gets.chomp
+      load_students(filename)
     when '9'
       exit
     else
@@ -28,8 +36,8 @@ def input_students
   name = STDIN.gets.chop
   while !name.empty? do
     puts "In which cohort is #{name}?"
-    join_date = STDIN.gets.chop
-    @students << {name: name, cohort: join_date.to_sym}
+    cohort = STDIN.gets.chop
+    add_student(name,cohort)
     if @students.count < 2
       puts "Now we have #{@students.count} student"
     else
@@ -76,8 +84,8 @@ def list_students
     puts 'No students to list'
   end
 end
-def save_students
-  file = File.open("students.csv", "w")
+def save_students(filename)
+  file = File.open(filename, "w")
   @students.each do |student|
     student_data = [student[:name],student[:cohort]]
     csv_line = student_data.join(',')
@@ -89,7 +97,7 @@ def load_students(filename = "students.csv")
   file = File.open(filename, "r")
   file.readlines.each do |line|
     name, cohort = line.chomp.split(',')
-    @students << {name: name, cohort: cohort.to_sym}
+    add_student(name,cohort)
   end
   file.close
 end
@@ -105,10 +113,13 @@ def try_load_students
     load_students
   end
 end
+def add_student(name, cohort)
+  @students << {name: name, cohort: cohort.to_sym}
+end
 def interactive_menu
   @students = []
+  try_load_students
   loop do
-    try_load_students
     print_menu
     selection = STDIN.gets.chomp
     process(selection)
